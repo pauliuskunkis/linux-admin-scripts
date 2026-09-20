@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
-# user-audit.sh - reports on local user accounts: sudo rights,
-# last login, locked/inactive accounts, password aging.
+#
+# user-audit.sh - audit local user accounts.
+# Currently reports password status (locked / none / set).
+# Planned: sudo rights, last login, password aging.
 
+# -e  exit immediately if any command fails
+# -u  treat use of an unset variable as an error
+# -o pipefail  a pipeline fails if ANY stage fails, not just the last
 set -euo pipefail
 
 usage() {
+    # Heredoc: everything until the EOF marker is printed as-is.
     cat <<EOF
 Usage: ${0##*/}
 
@@ -16,21 +22,41 @@ Options:
 EOF
 }
 
+# ${1:-} means "$1, or empty if unset" - without the :- the script
+# would abort under set -u when run with no arguments at all.
 case "${1:-}" in
     -h|--help) usage; exit 0 ;;
 esac
 
-# Thresholds come from the system, not hardcoded, so this works
-# on any distro where the admin changed the defaults.
+# Read the UID range from the system instead of hardcoding 1000.
+# $1 == "UID_MIN" is an exact match on the first word: a plain grep
+# would also hit SYS_UID_MIN and SUB_UID_MIN and give a wrong number.
 uid_min=$(awk '$1 == "UID_MIN" { print $2 }' /etc/login.defs)
 uid_max=$(awk '$1 == "UID_MAX" { print $2 }' /etc/login.defs)
 
-# Human accounts only: UID inside [uid_min, uid_max] excludes both
-# system accounts (low UIDs) and nobody (65534, above UID_MAX).
+# Build the list of human accounts. Field 3 of /etc/passwd is the UID;
+# the lower bound skips system accounts, the upper bound skips nobody
+# (65534). mapfile reads each line into an array element (-t strips the
+# newline). < <(...) is process substitution - a pipe would run the
+# loop in a subshell and the array would be empty afterwards.
 mapfile -t users < <(awk -F: -v min="$uid_min" -v max="$uid_max" \
     '$3 >= min && $3 <= max { print $1 }' /etc/passwd)
 
 for user in "${users[@]}"; do
     echo "=== $user ==="
-    # audit sections go here
+
+    # Password status. Field 2 of /etc/shadow holds the hash; the file
+    # is mode 000 so this needs sudo. Match on $1 == u rather than grep
+    # so "rpc" does not also match "rpcuser".
+    pw_field=$(sudo awk -F: -v u="$user" '$1 == u { print $2 }' /etc/shadow)
+
+    # ! prefix: account is locked - the hash is still there but nothing
+    #   can ever match it. Reversible with passwd -u.
+    # * or empty: no password was ever set. Not the same as locked -
+    #   there is nothing to unlock.
+    case "$pw_field" in
+        \!*)   echo "  password: LOCKED"   ;;
+        \*|"") echo "  password: none set" ;;
+        *)     echo "  password: set"      ;;
+    esac
 done

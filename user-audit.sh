@@ -59,4 +59,17 @@ for user in "${users[@]}"; do
         \*|"") echo "  password: none set" ;;
         *)     echo "  password: set"      ;;
     esac
+
+    # chage -l gives aging data as readable date, run it once and
+    # extract fields from the captured output rather than calling it
+    # again per field.
+    aging=$(sudo chage -l "$user")
+
+    # -F' *: *' makes the separator "spaces, colon, spaces" so the
+    # value comes out without the padding chage uses to align columns.
+    last_change=$(awk -F' *: *' '/Last password change/ { print $2 }' <<< "$aging")
+    max_days=$(awk -F' *: *' '/Maximum/ { print $2 }' <<< "$aging")
+
+    echo "  last change: $last_change"
+    echo "  max age: $max_days days"
 done

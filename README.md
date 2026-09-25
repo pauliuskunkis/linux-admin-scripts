@@ -40,8 +40,8 @@
 	## What it checks
 	- [x] Password status — set, locked, or never set
 	- [x] Password aging — last change date and maximum age
-	- [ ] Last login
-	- [ ] Sudo rights
+	- [ ] Last login - check user last-login activity and sudo privileges
+	- [ ] Sudo rights - check user sudo access.
 
 	## Design notes
 	- **UID range is read, not hardcoded.** The boundary between system and human

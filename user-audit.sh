@@ -72,4 +72,17 @@ for user in "${users[@]}"; do
 
     echo "  last change: $last_change"
     echo "  max age: $max_days days"
+
+    # lastlog prints a header plus one line per user. The columns shift
+    # when an account has never logged in, so test for that text rather
+    # than counting fields.
+    login_info=$(lastlog -u "$user")
+
+    if grep -q "Never logged in" <<< "$login_info"; then
+        echo "  last login: never"
+    else
+        # Skip the header with tail, then slice from the Latest column.
+        last_login=$(cut -c 44- <<< "$login_info" | tail -n 1 | xargs)
+        echo "  last login: $last_login"
+    fi
 done

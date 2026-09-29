@@ -85,4 +85,12 @@ for user in "${users[@]}"; do
         last_login=$(cut -c 44- <<< "$login_info" | tail -n 1 | xargs)
         echo "  last login: $last_login"
     fi
+
+    sudo_info=$(sudo -l -U "$user")
+    if grep -q "is not allowed to run sudo" <<< "$sudo_info"; then
+	echo "  sudo: no"
+    else
+	echo "  sudo: yes"
+    fi
+
 done

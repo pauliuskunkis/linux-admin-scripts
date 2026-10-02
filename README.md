@@ -58,6 +58,11 @@
 	- [x] Last login - check user last-login activity
 	- [x] Sudo rights - check user sudo access.
 
+	## Planned
+	- [ ] Group memberships
+	- [ ] Accounts with UID 0 other than root
+	- [ ] Shell assigned (`/sbin/nologin` vs an interactive shell)
+
 	## Design notes
 	- **UID range is read, not hardcoded.** The boundary between system and human
  	accounts comes from `UID_MIN` / `UID_MAX` in `/etc/login.defs`. A plain

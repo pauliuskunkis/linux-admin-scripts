@@ -62,6 +62,7 @@
 	- [ ] Group memberships
 	- [ ] Accounts with UID 0 other than root
 	- [ ] Shell assigned (`/sbin/nologin` vs an interactive shell)
+	- [ ] `health-check.sh` - system health reporting
 
 	## Design notes
 	- **UID range is read, not hardcoded.** The boundary between system and human

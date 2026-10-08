@@ -92,5 +92,10 @@ for user in "${users[@]}"; do
     else
 	echo "  sudo: yes"
     fi
-
 done
+
+# UID 0 is root as far as the kernel is concerned, whatever the account
+# is called. A legitimate system has exactly one.
+root_accounts=$(awk -F: '$3 == 0 { print $1 }' /etc/passwd)
+echo "=== UID 0 accounts ==="
+echo "$root_accounts"

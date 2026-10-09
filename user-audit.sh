@@ -99,3 +99,8 @@ done
 root_accounts=$(awk -F: '$3 == 0 { print $1 }' /etc/passwd)
 echo "=== UID 0 accounts ==="
 echo "$root_accounts"
+
+# Field 7 is the login shell. A service account should have nologin;
+# a real shell on one means it can be logged into interactively.
+shell=$(awk -F: -v u="$user" '$1 == u { print $7 }' /etc/passwd)
+echo "  shell: $shell"

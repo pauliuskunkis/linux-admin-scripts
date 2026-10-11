@@ -31,7 +31,7 @@
 	password: set
 	last change: never
 	max age: 99999 days
-	last login: Mon Sep 28 19:11:29 +0300 2026
+	last login: Sun Oct 11 23:47:49 +0300 2026
 	sudo: yes
 	=== spiderman ===
 	password: set
@@ -51,17 +51,21 @@
 	max age: 99999 days
 	last login: never
 	sudo: no
+	=== UID 0 accounts ===
+	root
+	shell: /bin/bash
+	groups: nagios nagcmd
 
 	## What it checks
 	- [x] Password status — set, locked, or never set
 	- [x] Password aging — last change date and maximum age
 	- [x] Last login - check user last-login activity
 	- [x] Sudo rights - check user sudo access.
+	- [x] Login shell — `/sbin/nologin` vs an interactive shell
+	- [x] Group memberships — groups grant privilege indirectly
+	- [x] UID 0 accounts — any account with UID 0 has full root privileges regardless of its name, so a second one is a privilege backdoor
 
 	## Planned
-	- [ ] Group memberships
-	- [ ] Accounts with UID 0 other than root
-	- [ ] Shell assigned (`/sbin/nologin` vs an interactive shell)
 	- [ ] `health-check.sh` - system health reporting
 
 	## Design notes

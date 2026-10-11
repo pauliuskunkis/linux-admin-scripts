@@ -104,3 +104,8 @@ echo "$root_accounts"
 # a real shell on one means it can be logged into interactively.
 shell=$(awk -F: -v u="$user" '$1 == u { print $7 }' /etc/passwd)
 echo "  shell: $shell"
+
+# Groups grant privilege indirectly - wheel gives sudo, docker is
+# effectively root since a container can mount the host filesystem.
+user_groups=$(id -nG "$user")
+echo "  groups: $user_groups"

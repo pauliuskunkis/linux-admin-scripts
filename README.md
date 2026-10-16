@@ -64,9 +64,10 @@
 	- [x] Login shell — `/sbin/nologin` vs an interactive shell
 	- [x] Group memberships — groups grant privilege indirectly
 	- [x] UID 0 accounts — any account with UID 0 has full root privileges regardless of its name, so a second one is a privilege backdoor
+	- [x] `health-check.sh` - system health reporting
 
 	## Planned
-	- [ ] `health-check.sh` - system health reporting
+	- [ ] Failed systemd units
 
 	## Design notes
 	- **UID range is read, not hardcoded.** The boundary between system and human

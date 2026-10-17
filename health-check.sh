@@ -32,3 +32,9 @@ esac
 # they are noise in a disk report.
 echo "=== Disk usage ==="
 df -h -x tmpfs -x devtmpfs
+
+# --failed lists units that tried to start and errored. A healthy system
+# prints nothing.
+echo
+echo "=== Failed services ==="
+systemctl --failed --no-pager

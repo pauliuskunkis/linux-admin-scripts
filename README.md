@@ -65,9 +65,10 @@
 	- [x] Group memberships — groups grant privilege indirectly
 	- [x] UID 0 accounts — any account with UID 0 has full root privileges regardless of its name, so a second one is a privilege backdoor
 	- [x] `health-check.sh` - system health reporting
-
+	- [x] Failed systemd units
+	
 	## Planned
-	- [ ] Failed systemd units
+	- [ ] Memory and swap usage
 
 	## Design notes
 	- **UID range is read, not hardcoded.** The boundary between system and human

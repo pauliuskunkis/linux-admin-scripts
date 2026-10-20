@@ -69,6 +69,7 @@
 	
 	## Planned
 	- [ ] Memory and swap usage
+	- [ ] Load average and uptime
 
 	## Design notes
 	- **UID range is read, not hardcoded.** The boundary between system and human

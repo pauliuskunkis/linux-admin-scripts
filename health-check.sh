@@ -56,3 +56,9 @@ uptime
 echo
 echo "=== Pending updates ==="
 dnf check-update --quiet || true
+
+# du sums disk usage per directory; sort -h handles human-readable sizes
+# like "1.2G". /var is where logs, caches and spools grow unnoticed.
+echo
+echo "=== Largest directories in /var ==="
+sudo du -h --max-depth=1 /var 2>/dev/null | sort -hr | head -10

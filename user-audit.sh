@@ -92,6 +92,17 @@ for user in "${users[@]}"; do
     else
 	echo "  sudo: yes"
     fi
+
+    # Field 7 is the login shell. A service account should have nologin;
+    # a real shell on one means it can be logged into interactively.
+    shell=$(awk -F: -v u="$user" '$1 == u { print $7 }' /etc/passwd)
+    echo "  shell: $shell"
+
+    # Groups grant privilege indirectly - wheel gives sudo, docker is
+    # effectively root since a container can mount the host filesystem.
+    user_groups=$(id -nG "$user")
+    echo "  groups: $user_groups"
+
 done
 
 # UID 0 is root as far as the kernel is concerned, whatever the account
@@ -99,13 +110,3 @@ done
 root_accounts=$(awk -F: '$3 == 0 { print $1 }' /etc/passwd)
 echo "=== UID 0 accounts ==="
 echo "$root_accounts"
-
-# Field 7 is the login shell. A service account should have nologin;
-# a real shell on one means it can be logged into interactively.
-shell=$(awk -F: -v u="$user" '$1 == u { print $7 }' /etc/passwd)
-echo "  shell: $shell"
-
-# Groups grant privilege indirectly - wheel gives sudo, docker is
-# effectively root since a container can mount the host filesystem.
-user_groups=$(id -nG "$user")
-echo "  groups: $user_groups"

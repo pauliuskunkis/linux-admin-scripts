@@ -26,38 +26,83 @@
 	read it. The script writes to stdout rather than a fixed file, so the caller
 	decides where the output goes.
 
-	## Example output
+	## Example output of user-audit.sh
 	=== polas ===
 	password: set
 	last change: never
 	max age: 99999 days
-	last login: Sun Oct 11 23:47:49 +0300 2026
+	last login: Sat Oct 24 20:22:10 +0300 2026
 	sudo: yes
+	shell: /bin/bash
+	groups: polas wheel
 	=== spiderman ===
 	password: set
 	last change: Jun 20, 2026
 	max age: 99999 days
 	last login: Sun Jul 5 17:20:03 +0300 2026
 	sudo: no
+	shell: /bin/bash
+	groups: spiderman superheroes
 	=== ironman ===
 	password: set
 	last change: Jun 19, 2026
 	max age: 99999 days
 	last login: never
 	sudo: no
+	shell: /bin/bash
+	groups: superheroes
 	=== nagios ===
 	password: LOCKED
 	last change: Jul 26, 2026
 	max age: 99999 days
 	last login: never
 	sudo: no
-	=== UID 0 accounts ===
-	root
 	shell: /bin/bash
 	groups: nagios nagcmd
+	=== UID 0 accounts ===
+	root
+
+	## Example output of health-check.sh
+	=== Disk usage ===
+	Filesystem           Size  Used Avail Use% Mounted on
+	/dev/mapper/rl-root   34G  9.3G   25G  28% /
+	/dev/sda1            960M  677M  284M  71% /boot
+	/dev/sr0              51M   51M     0 100% /run/media/polas/VBox_GAs_7.2.8
+
+	=== Failed services ===
+	  UNIT                    LOAD   ACTIVE SUB    DESCRIPTION
+	● squid.service           loaded failed failed Squid caching proxy
+	● vboxadd-service.service loaded failed failed vboxadd-service.service
+	● vboxadd.service         loaded failed failed vboxadd.service
+
+	LOAD   = Reflects whether the unit definition was properly loaded.
+	ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+	SUB    = The low-level unit activation state, values depend on unit type.
+	3 loaded units listed.
+
+	=== Memory ===
+	               total        used        free      shared  buff/cache   available
+	Mem:           3.6Gi       1.6Gi       834Mi        33Mi       1.4Gi       2.0Gi
+	Swap:          3.8Gi          0B       3.8Gi
+
+	=== Uptime and load ===
+	 23:09:51 up  3:01,  2 users,  load average: 0.06, 0.05, 0.01
+
+	=== Pending updates ===
+
+	=== Largest directories in /var ===
+	'2.6G    /var
+	'1.8G    /var/cache
+	 596M    /var/lib
+	 191M    /var/tmp
+	 93M     /var/log
+	 700K    /var/spool
+	 184K    /var/named
+	 12K     /var/www
+	 0       /var/yp
+	 0       /var/preserve
 
 	## What it checks
-	- [x] Password status — set, locked, or never set
 	- [x] Password aging — last change date and maximum age
 	- [x] Last login - check user last-login activity
 	- [x] Sudo rights - check user sudo access.
@@ -66,13 +111,14 @@
 	- [x] UID 0 accounts — any account with UID 0 has full root privileges regardless of its name, so a second one is a privilege backdoor
 	- [x] `health-check.sh` - system health reporting
 	- [x] Failed systemd units
-	
+	- [x] Memory and swap usage
+	- [x] Load average and uptime
+	- [x] Pending package updates
+	- [x] Largest directories under `/var`
+
 	## Planned
-	- [ ] Memory and swap usage
-	- [ ] Load average and uptime
-	- [ ] Pending package updates
-	- [ ] Largest directories under 
-	`/var`
+
+	- [ ] Troubleshooting log
 
 	## Design notes
 	- **UID range is read, not hardcoded.** The boundary between system and human

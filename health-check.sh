@@ -38,3 +38,15 @@ df -h -x tmpfs -x devtmpfs
 echo
 echo "=== Failed services ==="
 systemctl --failed --no-pager
+
+# -h gives human-readable units. The "available" column matters more than
+# "free" - Linux uses spare RAM for cache and frees it on demand.
+echo
+echo "=== Memory ==="
+free -h
+
+# Load average is the 1/5/15-minute run queue length. Compare it against
+# core count: a load of 4 is fine on 4 cores, not on 1.
+echo
+echo "=== Uptime and load ==="
+uptime

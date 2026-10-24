@@ -50,3 +50,9 @@ free -h
 echo
 echo "=== Uptime and load ==="
 uptime
+
+# check-update exits 100 when updates exist, 0 when none - not a failure,
+# so || true stops set -e from killing the script.
+echo
+echo "=== Pending updates ==="
+dnf check-update --quiet || true

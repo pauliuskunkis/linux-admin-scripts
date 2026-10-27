@@ -135,10 +135,11 @@ Swap:          3.8Gi          0B       3.8Gi
 - [x] Pending package updates
 - [x] Largest directories under `/var` — the usual culprit when a disk fills
 
-## Planned
+	## Planned
 - [ ] Troubleshooting log — deliberately break the system (service won't
   start, `/var` fills up, wrong SELinux context) and document symptom,
   the command that found the cause, and the fix
+
 	## Design notes
 	- **UID range is read, not hardcoded.** The boundary between system and human
  	accounts comes from `UID_MIN` / `UID_MAX` in `/etc/login.defs`. A plain

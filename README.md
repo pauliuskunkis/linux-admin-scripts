@@ -139,6 +139,7 @@ Swap:          3.8Gi          0B       3.8Gi
 - [ ] Troubleshooting log — deliberately break the system (service won't
   start, `/var` fills up, wrong SELinux context) and document symptom,
   the command that found the cause, and the fix
+- [ ] Run both scripts from a systemd timer and mail the output
 
 	## Design notes
 	- **UID range is read, not hardcoded.** The boundary between system and human
